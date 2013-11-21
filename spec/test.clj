@@ -10,6 +10,14 @@
           (it "returns false on 'abc'"
               (should-not-be numeric? "abcd")))
                
+(describe "wrap-prepend-method"
+  (it "prepends the method"
+    (should=
+      ((wrap-prepend-method :matchee) {:split-uri ["a" "b" "c"]
+                                       :request-method :get})
+      [:get "a" "b" "c"])
+    )
+  )
 
 (describe "wrap-split-uri"
   (it "splits"

@@ -9,7 +9,8 @@
                  [org.clojure/core.match "0.2.0"]
                  ]
   :profiles {:dev {:dependencies [[speclj "2.8.1"]]}}
-  :plugins [[speclj "2.7.2"]]
+  :plugins [[speclj "2.7.2"] [lein-ring "0.8.8"]]
   :main test-ring.core
   :test-paths ["spec"]
+  :ring {:handler test-ring.core/dispatch}
 )
