@@ -30,15 +30,16 @@
   (re-matches #"\d+" s)
   )
 
-(defn get-handler [matchee]
-  (match matchee
-   [_ "hello"] (hello "world")
-   [:get "hello" (x :guard numeric?)] (hello (str "Mr. number " x))
-   [:get "hello" x] (hello x)
-   [:get "about" "us"] about-us
-   :else not-found))
+(def my-dispatch (partial dispatch
+                          (fn [matchee]
+                            (match matchee
+                                   [_ "hello"] (hello "world")
+                                   [:get "hello" (x :guard numeric?)] (hello (str "Mr. number " x))
+                                   [:get "hello" x] (hello x)
+                                   [:get "about" "us"] about-us
+                                   :else not-found))))
 
 (defn -main
   []
-  (jetty/run-jetty (partial dispatch get-handler)
+  (jetty/run-jetty my-dispatch
                    {:port 3000}))
