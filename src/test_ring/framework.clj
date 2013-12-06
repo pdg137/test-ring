@@ -1,4 +1,6 @@
-(ns test-ring.framework)
+(ns test-ring.framework
+  (:require [clojure.core.match :refer [match]])
+)
 
 (defn split-uri [uri]
   (-> uri
@@ -26,6 +28,18 @@
 
 (defn dispatch [get-handler request]
   ((-> (partial handler get-handler) wrap-prepend-method wrap-split-uri) request))
+
+(defn not-found [request]
+  {:status 404
+   :headers {"Content-Type" "text/html"}
+   :body (str "Your page was not found: " (:matchee request))})
+
+(defmacro route [ & table ]
+  `(partial dispatch
+            (fn [matchee#]
+              (match matchee#
+                     ~@table
+                     :else not-found))))
 
 ;(defmacro route [ & table ]
 ;  `(fn [matchee#]
