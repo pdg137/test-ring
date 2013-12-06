@@ -1,6 +1,6 @@
 (ns test-ring.core
   (:require [ring.adapter.jetty :as jetty]
-            [test-ring.framework :as framework]))
+            [test-ring.framework :refer [dispatch]]))
 
 (use '[clojure.core.match :only (match)])
 
@@ -40,5 +40,5 @@
 
 (defn -main
   []
-  (jetty/run-jetty (partial framework/dispatch get-handler)
+  (jetty/run-jetty (partial dispatch get-handler)
                    {:port 3000}))
