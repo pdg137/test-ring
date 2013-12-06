@@ -20,3 +20,13 @@
 (defn wrap-prepend-method [handler]
   (comp handler prepend-method))
 
+(defn handler [get-handler request]
+  ((get-handler (:matchee request))
+               request))
+
+(defn dispatch [get-handler request]
+  ((-> (partial handler get-handler) wrap-prepend-method wrap-split-uri) request))
+
+;(defmacro route [ & table ]
+;  `(fn [matchee#]
+;     (match matchee# ~@table)))

@@ -1,7 +1,6 @@
 (ns test-ring.core
   (:require [ring.adapter.jetty :as jetty]
-            [test-ring.framework :as framework])
-)
+            [test-ring.framework :as framework]))
 
 (use '[clojure.core.match :only (match)])
 
@@ -33,20 +32,13 @@
 
 (defn get-handler [matchee]
   (match matchee
-         [_ "hello"] (hello "world")
-         [:get "hello" (x :guard numeric?)] (hello (str "Mr. number " x))
-         [:get "hello" x] (hello x)
-         [:get "about" "us"] about-us
-         :else not-found))
-
-(defn handler [request]
-  ((get-handler (:matchee request))
-               request))
-
-(defn dispatch [request]
-  ((-> handler framework/wrap-prepend-method framework/wrap-split-uri) request))
+   [_ "hello"] (hello "world")
+   [:get "hello" (x :guard numeric?)] (hello (str "Mr. number " x))
+   [:get "hello" x] (hello x)
+   [:get "about" "us"] about-us
+   :else not-found))
 
 (defn -main
   []
-  (jetty/run-jetty dispatch
+  (jetty/run-jetty (partial framework/dispatch get-handler)
                    {:port 3000}))
