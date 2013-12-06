@@ -1,28 +1,9 @@
 (ns test-ring.core
-  (:require [ring.adapter.jetty :as jetty])
+  (:require [ring.adapter.jetty :as jetty]
+            [test-ring.framework :as framework])
 )
 
 (use '[clojure.core.match :only (match)])
-
-(defn split-uri [uri]
-  (-> uri
-      (clojure.string/split #"/")
-      rest
-      vec))
-
-(defn add-split-uri [request]
-  (assoc request :split-uri (split-uri (:uri request))))
-
-(defn prepend-method [request]
-  (assoc request
-    :matchee (vec (cons (:request-method request)
-                        (:split-uri request)))))
-
-(defn wrap-split-uri [handler]
-  (comp handler add-split-uri))
-
-(defn wrap-prepend-method [handler]
-  (comp handler prepend-method))
 
 (defn hello [x]
   (fn [request]
@@ -63,7 +44,7 @@
                request))
 
 (defn dispatch [request]
-  ((-> handler wrap-prepend-method wrap-split-uri) request))
+  ((-> handler framework/wrap-prepend-method framework/wrap-split-uri) request))
 
 (defn -main
   []
