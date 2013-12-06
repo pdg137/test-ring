@@ -40,7 +40,3 @@
               (match matchee#
                      ~@table
                      :else not-found))))
-
-;(defmacro route [ & table ]
-;  `(fn [matchee#]
-;     (match matchee# ~@table)))
